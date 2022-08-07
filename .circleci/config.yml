@@ -136,17 +136,18 @@ jobs:
       - run: echo HI > workspace/x.txt
       - run: cat workspace/x.txt
       - persist_to_workspace:
-        root: workspace
-        paths:
+          root: workspace
+          paths:
           - x.txt
   print-file:
     docker:
       - image: python:3.7-alpine3.11
     steps:
       - checkout 
-      - attach_workspace:
-        - at: workspace
-      - run: cat workspace/x.txt
+      - attach_workspace: 
+          at: workspace
+      - run: 
+          command: cat workspace/x.txt
       
   configure-infrastructure:
     docker:
