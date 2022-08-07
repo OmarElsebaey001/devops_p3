@@ -117,11 +117,11 @@ jobs:
             --tags project=udapeople
       - run: mkdir -p workspace
       - run:
-        command: |
-          echo "[web]" > workspace/inventorys.txt
-          aws ec2 describe-instances \
-          --query 'Reservations[*].Instances[*].PublicIpAddress' \
-          --output text  >> workspace/inventorys.txt
+          command: |
+            echo "[web]" > .circleci/ansible/inventorys.txt
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text  >> .circleci/ansible/inventorys.txt
       - persist_to_workspace:
           root: workspace
           paths:
@@ -154,19 +154,20 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints: ["21:6c:9f:dd:e7:bd:1e:80:31:37:15:d0:d6:e8:42:f2"]
+          fingerprints: ["21:6c:9f:dd:e7:bd:1e:80:31:37:15:d0:d6:e8:42:f2"]
       - attach_workspace:
-        - at: workspace
-      - run: cat workspace/inventorys.txt
+          at: ~/.circleci/ansible
+      - run: 
+          command: cat ~/.circleci/ansible/inventorys.txt
       - run:
-        name: Install Dependencies 
-        command: |
-          apk add --update ansible
+          name: Install Dependencies 
+          command: |
+            apk add --update ansible
       - run:
-        name: Config Server
-        command: |
-          cd .circleci/ansible
-          ansible-playbook -i inventorys.txt configure-server.yml
+          name: Config Server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventorys.txt configure-server.yml
 workflows:
     default:
       jobs:
