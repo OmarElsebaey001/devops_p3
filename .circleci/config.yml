@@ -103,24 +103,24 @@ jobs:
       - checkout
       - run: yum -y install tar gzip
       - run:
-        command: |
-          aws cloudformation deploy \
-          --template-file .circleci/files/backend.yml \
-          --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-          --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-          --tags project=udapeople
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
       - run:
-        command: |
-          aws cloudformation deploy \
-          --template-file .circleci/files/frontend.yml \
-          --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-          --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-          --tags project=udapeople
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
       - run:
-        command: |
-          aws ec2 describe-instances \
-          --query 'Reservations[*].Instances[*].PublicIpAddress'\
-          --output text  >> .circleci/ansible/inventory.txt
+          command: |
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress'\
+            --output text  >> .circleci/ansible/inventory.txt
       - destroy-environment
 workflows:
     default:
