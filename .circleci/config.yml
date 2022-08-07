@@ -187,4 +187,5 @@ workflows:
         #- configure-infrastructure:
         #    requires: [build-backend]
         - create-file
-        - print-file
+        - print-file:
+            requires: [create-file]
