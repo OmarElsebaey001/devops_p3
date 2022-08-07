@@ -125,6 +125,7 @@ jobs:
           root: ~/.circleci/ansible
           paths:
             - inventorys.txt
+
       - destroy-environment
   configure-infrastructure:
     docker:
