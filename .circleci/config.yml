@@ -7,11 +7,10 @@ jobs:
     steps:
       - checkout
       - run:
-        name: build-compile front-end
-        command: |
-          cd frontend  
-          npm install 
-          npm run build 
+          command: |
+            cd frontend  
+            npm install 
+            npm run build 
       
   build-backend:
     docker:
@@ -19,13 +18,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: build-compile front-end
-        command: |
-          cd backend  
-          npm install 
-          npm run build 
-  
-  workflows:
+          command: |
+            cd backend  
+            npm install 
+            npm run build 
+workflows:
     default:
       jobs:
         - build-frontend
