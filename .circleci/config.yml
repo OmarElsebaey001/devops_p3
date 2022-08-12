@@ -147,8 +147,7 @@ jobs:
       - run:
           name: Config Server
           command: |
-            cd .circleci/ansible
-            ansible-playbook -i workspace/inventory.txt configure-server.yml
+            ansible-playbook -i workspace/inventory.txt .circleci/ansible/configure-server.yml
       - destroy-environment
 workflows:
     default:
@@ -167,4 +166,3 @@ workflows:
             requires: [test-frontend, test-backend, scan-frontend, scan-backend]
         - configure-infrastructure:
             requires: [deploy-infrastructure]
-        
