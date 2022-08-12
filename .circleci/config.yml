@@ -163,17 +163,17 @@ jobs:
               npm install
               npm run migrations > migrations_dump.txt
         - run:
-            name: Send migration results to memstash
-            command: |
-              # Your code here
-              exit 1
-      # Here's where you will add some code to rollback on failure      
-
+            name: Send migration status to memstash.io
+            command: |   
+              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+              then
+              curl https://kvdb.io/7dpZaCikiFKQhzgjjYTqKQ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              fi
 workflows:
     default:
       jobs:
-        #- build-frontend
-        #- build-backend
+        - build-frontend
+        - build-backend
         #- test-frontend:
         #    requires: [build-frontend]
         #- test-backend:
@@ -182,7 +182,9 @@ workflows:
         #    requires: [build-frontend]
         #- scan-backend:
         #    requires: [build-backend]
-        - deploy-infrastructure
+        #- deploy-infrastructure:
         #    requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-        - configure-infrastructure:
-            requires: [deploy-infrastructure]
+        #- configure-infrastructure:
+        #    requires: [deploy-infrastructure]
+        - run-migrations:
+            requires: [build-backend]
