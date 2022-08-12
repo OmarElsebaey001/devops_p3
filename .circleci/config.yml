@@ -177,8 +177,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apt install -y ansible
-            apt install -y python3
+            sudo apt install -y ansible
+            sudo apt install -y python3
+            sudo apt install npm
 
 workflows:
     default:
