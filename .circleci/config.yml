@@ -206,10 +206,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum -y install tar gzip ansible
-            yum -y install python3 nodejs npm
-
-            
+            apk add --update ansible
+            apk add --update python3
+            apk add --update tar
+            apk add --update gzip
+            apk add --update npm
+            apk add --update nodejs
+      
 workflows:
     default:
       jobs:
