@@ -145,6 +145,7 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update python3
+      - run: cat .circleci/ansible/inventory.txt
       - run:
           name: Config Server
           command: |
