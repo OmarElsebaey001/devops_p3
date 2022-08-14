@@ -224,6 +224,7 @@ jobs:
             cd backend 
             npm i 
             npm run build 
+            cd ..
             tar -C backend -czvf artifact.tar.gz .
             echo "Contents  of the inventory.txt file is -------"
             cat workspace/inventory.txt
