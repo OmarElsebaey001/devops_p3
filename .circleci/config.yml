@@ -166,14 +166,18 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-for-fluent-bit
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            yum install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+            yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
             yum install nodejs
+            yum install ansible
+            yum install npm
+            
+            
       - attach_workspace:
           at: workspace
       - run:
