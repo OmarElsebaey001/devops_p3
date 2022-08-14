@@ -149,7 +149,7 @@ jobs:
       - run:
           name: Config Server
           command: |
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml --private-key udacity.pem
       #- destroy-environment
   run-migrations:
       docker:
