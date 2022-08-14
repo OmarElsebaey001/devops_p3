@@ -152,7 +152,7 @@ jobs:
             cd .circleci/ansible
             cat ansible.cfg
             ansible --version
-            ansible-playbook -i inventory.txt configure-server.yml --private-key ../../udacity.pem
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.txt configure-server.yml --private-key ../../udacity.pem
       #- destroy-environment
   run-migrations:
       docker:
