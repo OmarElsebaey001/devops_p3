@@ -175,6 +175,7 @@ jobs:
             yum -y install tar gzip
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
             . ~/.nvm/nvm.sh
+            source ~/.nvm/nvm.sh
       - run: 
           name: Installing Node
           command: nvm install node 
