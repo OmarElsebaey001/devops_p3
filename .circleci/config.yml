@@ -175,9 +175,9 @@ jobs:
             yum -y install tar gzip
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
             . ~/.nvm/nvm.sh
-            nvm install --lts
-            
-            
+      - run: 
+          name: Installing Node
+          command: nvm install node 
       - attach_workspace:
           at: workspace
       - run:
@@ -236,6 +236,6 @@ workflows:
         #    requires: [deploy-infrastructure]
         - deploy-frontend
         #    requires: [run-migrations]
-        - deploy-backend
+        #- deploy-backend
         #    requires: [run-migrations]
         
