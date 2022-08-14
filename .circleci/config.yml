@@ -166,19 +166,14 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-for-fluent-bit
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            apk add --update aws-cli
-            apk add --update ansible
-            apk add --update python3
-            apk add --update tar
-            apk add --update gzip
-            apk add --update npm
-            apk add --update nodejs
+            yum install ansible
+            yum install nodejs
       - attach_workspace:
           at: workspace
       - run:
