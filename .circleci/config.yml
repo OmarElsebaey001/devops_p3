@@ -174,9 +174,10 @@ jobs:
           command: |
             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
             yum install -y nodejs
+            yum install -y npm
             npm --version
-            yum install tar gzip 
-            yum install ansible 
+            yum -y install tar gzip 
+            yum -y install ansible 
       - attach_workspace:
           at: workspace
       - run:
