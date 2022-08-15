@@ -1,1 +1,1 @@
-## Deployment playbook goes here.
+## Back-end server configuration playbook goes here.

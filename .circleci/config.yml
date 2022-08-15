@@ -228,6 +228,8 @@ jobs:
             tar -C backend -czvf artifact.tar.gz .
             echo "Contents  of the inventory.txt file is -------"
             cat workspace/inventory.txt
+            mkdir -p .circleci/ansible/roles/deploy/files
+            cp artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
             ansible-playbook -i workspace/inventory.txt .circleci/ansible/deploy-backend.yml
 
 workflows:

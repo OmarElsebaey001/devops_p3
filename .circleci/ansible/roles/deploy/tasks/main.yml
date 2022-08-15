@@ -1,0 +1,5 @@
+- name: "Copying the build"
+  become: true
+  copy:
+    src: artifact.tar.gz
+    dest: /
