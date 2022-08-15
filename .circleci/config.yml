@@ -230,7 +230,7 @@ jobs:
             cat workspace/inventory.txt
             mkdir -p .circleci/ansible/roles/deploy/files
             cp artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
-            ansible-playbook -i workspace/inventory.txt .circleci/ansible/deploy-backend.yml
+            ansible-playbook -i workspace/inventory.txt .circleci/ansible/deploy-backend.yml --private-key udacity.pem 
 
 workflows:
     default:
