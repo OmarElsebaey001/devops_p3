@@ -9,3 +9,12 @@
     src: /artifact.tar.gz
     dest: /backend
     remote_src: yes
+- name: Install "build" 
+  become: true 
+  npm:
+    name: running install npm backend
+    path: /backend
+  
+ - name: start pm2 process
+   command: 'pm2 start npm -- start'
+   become: yes
