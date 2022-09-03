@@ -3,3 +3,9 @@
   copy:
     src: artifact.tar.gz
     dest: /
+- name: Extract artifact.tar.gz /backend
+  become: true
+  unarchive:
+    src: /artifact.tar.gz
+    dest: /backend
+    remote_src: yes
