@@ -1,4 +1,4 @@
-name: "Creates backend app directory"
+- name: "Creates backend app directory"
   file:
     path: /backend
     state: directory
@@ -10,13 +10,13 @@ name: "Creates backend app directory"
     dest: /backend
 
 
-name: "Unzip backend files to correct directory"
+- name: "Unzip backend files to correct directory"
   shell: |
     cd /backend
     tar -zxvf artifact.tar.gz
     rm -rf artifact.tar.gz
 
-name: "Install dependencies for project"
+- name: "Install dependencies for project"
   shell: |
     cd /backend
     npm install
@@ -24,7 +24,7 @@ name: "Install dependencies for project"
     pm2 start npm -- start
 
 
-name:  start app
+- name:  start app
   command:  pm2 start main.js
   args:
     chdir: ~/backend/dist
