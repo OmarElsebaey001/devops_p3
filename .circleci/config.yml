@@ -149,7 +149,6 @@ jobs:
       - run:
           name: Config Server
           command: |
-            cd .circleci/ansible
             ansible --version
             ansible-playbook -i workspace/inventory.txt .circleci/ansible/configure-server.yml --private-key udacity.pem
       - destroy-environment
