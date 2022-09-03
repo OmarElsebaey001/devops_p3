@@ -27,7 +27,7 @@
 - name:  start app
   command:  pm2 start main.js
   args:
-    chdir: ~/backend/dist
+    chdir: ~/backend/dest
   environment:
       TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
       TYPEORM_MIGRATIONS_DIR: "./migrations"
