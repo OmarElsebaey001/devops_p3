@@ -2,17 +2,21 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      workflow_id:
+        type: string
     steps:
       - run:
-          name: Destroy environments
+          name: Destroy environment << parameters.workflow_id >> 
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Destroy environments
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+            echo Destroying the total Env
+            export WF_ID << parameters.workflow_id >>
+            echo "udapeople-frontend-<< pipeline.id >>"
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-<< pipeline.id >>"
+            aws cloudformation delete-stack --stack-name "udapeople-backend-<< pipeline.id >>"
+            aws s3 rm s3://udapeople-<< pipeline.id >> --force 
+            echo ALL ENV WAS DELETED
 jobs:
   build-frontend:
     docker:
@@ -126,7 +130,7 @@ jobs:
           root: workspace
           paths:
             - inventory.txt
-#      - destroy-environment
+      - destroy-environment
   
   configure-infrastructure:
     docker:
@@ -245,17 +249,24 @@ jobs:
           command: |
             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
             yum install -y nodejs
-      - run:
-          name: Get backend url
-          command: |
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
 
+      - attach_workspace:
+          at: workspace
+
+      - run:
+          name: getting the backend URL
+          command: |
+            export BACKEND_IP=`cat workspace/inventory.txt | grep "[0-9]" `
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
       - run:
           name: Backend smoke test.
           command: |
             if curl "${API_URL}/api/status" | grep "ok"
             then
+                echo BACKEND PASSED!
                 return 0
             else
                 return 1
@@ -267,11 +278,13 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-                # Change this to 0 after the job fails
+              echo FRONT END FAILED!!!
               return 1
             else
               return 1
             fi
+      - destroy-environment: 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 workflows:
     default:
       jobs:
@@ -296,4 +309,4 @@ workflows:
         - deploy-backend:
             requires: [configure-infrastructure]
         - smoke-test:
-            requires: [deploy-backend,deploy-frontend]
+            requires: [deploy-backend,deploy-frontend,run-migrations]
