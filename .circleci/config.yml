@@ -165,6 +165,7 @@ jobs:
               cd backend
               npm install
               npm run migrations > migrations_dump.txt
+              ls 
               cat migrations_dump.txt
 
   deploy-frontend:
@@ -284,12 +285,13 @@ workflows:
             requires: [build-frontend]
         - scan-backend:
             requires: [build-backend]
+        - run-migrations:
+            requires: [scan-backend]
+        
         - deploy-infrastructure:
             requires: [test-frontend, test-backend, scan-frontend, scan-backend]
         - configure-infrastructure:
             requires: [deploy-infrastructure]
-        #- run-migrations:
-        #    requires: [configure-infrastructure]
         - deploy-frontend:
             requires: [configure-infrastructure]
         - deploy-backend:
