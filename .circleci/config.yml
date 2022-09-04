@@ -198,9 +198,6 @@ jobs:
             npm install
             npm run build
             ls
-      - run:
-          name: Taring the project
-            ls 
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dest
             aws s3 cp dest s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
   deploy-backend:
