@@ -15,7 +15,7 @@ commands:
             echo "udapeople-frontend-<< pipeline.id >>"
             aws cloudformation delete-stack --stack-name "udapeople-frontend-<< pipeline.id >>"
             aws cloudformation delete-stack --stack-name "udapeople-backend-<< pipeline.id >>"
-            aws s3 rm s3://udapeople-<< pipeline.id >> --force 
+            aws s3 rb s3://udapeople-<< pipeline.id >> --force 
             echo ALL ENV WAS DELETED
 jobs:
   build-frontend:
@@ -130,7 +130,9 @@ jobs:
           root: workspace
           paths:
             - inventory.txt
-      - destroy-environment
+      - destroy-environment: 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
   
   configure-infrastructure:
     docker:
@@ -155,7 +157,8 @@ jobs:
           command: |
             ansible --version
             ansible-playbook -i workspace/inventory.txt .circleci/ansible/configure-server.yml --private-key udacity.pem
-      - destroy-environment
+      - destroy-environment: 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   run-migrations:
       docker:
         - image: circleci/node:13.8.0
