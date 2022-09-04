@@ -9,7 +9,10 @@ commands:
           command: |
               if (( 1 ));
               then
-                  cd /backend
+                  ls ~/
+                  echo =====list of curr dir======
+                  ls 
+                  cd ~/project/backend
                   npm install
                   npm run migration:revert
               fi
@@ -28,7 +31,7 @@ commands:
             echo "udapeople-frontend-<< parameters.workflow_id >>"
             aws cloudformation delete-stack --stack-name "udapeople-frontend-<< parameters.workflow_id >>"
             aws cloudformation delete-stack --stack-name "udapeople-backend-<< parameters.workflow_id >>"
-            aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force 
+            aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force --recursive
             echo ALL ENV WAS DELETED
 jobs:
   build-frontend:
@@ -299,6 +302,26 @@ jobs:
             else
               return 1
             fi
+      - destroy-environment: 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
+  cloudfront-update:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      -checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name AppStack \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
       - destroy-environment: 
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
