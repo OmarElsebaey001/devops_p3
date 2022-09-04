@@ -271,24 +271,17 @@ jobs:
             yum -y install tar gzip 
       - attach_workspace:
           at: workspace
-
-      - run:
-          name: getting the backend URL
-          command: |
-            export BACKEND_IP=`cat workspace/inventory.txt | grep "[0-9]" `
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = ${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            cat frontend/.env
       - run:
           name: Backend smoke test.
           command: |
+            export BACKEND_IP=`cat workspace/inventory.txt | grep "[0-9]" `
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo $API_URL
             if curl "${API_URL}/api/status" | grep "ok"
             then
-                echo BACKEND PASSED!
-                return 0
+                echo BACKEND PASSED
             else
-                return 1
+                echo BACKEND FAILED
             fi
       - run:
           name: Frontend smoke test.
