@@ -1,5 +1,19 @@
 version: 2.1
 commands:
+  revert-migrations:
+    description: Revert the last migration
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+              if (( 1 ));
+              then
+                  cd /backend
+                  npm install
+                  npm run migration:revert
+              fi
+
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
@@ -10,12 +24,11 @@ commands:
           name: Destroy environment << parameters.workflow_id >> 
           when: on_fail
           command: |
-            echo Destroying the total Env
-            export WF_ID << parameters.workflow_id >>
-            echo "udapeople-frontend-<< pipeline.id >>"
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-<< pipeline.id >>"
-            aws cloudformation delete-stack --stack-name "udapeople-backend-<< pipeline.id >>"
-            aws s3 rb s3://udapeople-<< pipeline.id >> --force 
+            echo Destroying the total Env << parameters.workflow_id >> 
+            echo "udapeople-frontend-<< parameters.workflow_id >>"
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-<< parameters.workflow_id >>"
+            aws cloudformation delete-stack --stack-name "udapeople-backend-<< parameters.workflow_id >>"
+            aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force 
             echo ALL ENV WAS DELETED
 jobs:
   build-frontend:
@@ -252,7 +265,7 @@ jobs:
           command: |
             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
             yum install -y nodejs
-
+            yum -y install tar gzip 
       - attach_workspace:
           at: workspace
 
@@ -288,6 +301,7 @@ jobs:
             fi
       - destroy-environment: 
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
 workflows:
     default:
       jobs:
