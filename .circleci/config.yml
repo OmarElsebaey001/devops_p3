@@ -290,9 +290,10 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              echo FRONT END FAILED!!!
-              return 1
+              echo PASSED FRONTEND SMOKE TEST!!
+              return 0
             else
+              echo PASSED FRONTEND SMOKE TEST!!
               return 1
             fi
       - destroy-environment: 
