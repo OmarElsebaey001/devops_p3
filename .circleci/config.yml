@@ -14,7 +14,7 @@ commands:
                   ls 
                   cd ~/project/backend
                   npm install
-                  npm run migration:revert
+                  npm run migrations:revert
               fi
 
   destroy-environment:
@@ -29,7 +29,7 @@ commands:
           command: |
             echo Destroying the total Env << parameters.workflow_id >> 
             echo "udapeople-frontend-<< parameters.workflow_id >>"
-            aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force --recursive
+            aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
             aws cloudformation delete-stack --stack-name "udapeople-frontend-<< parameters.workflow_id >>"
             aws cloudformation delete-stack --stack-name "udapeople-backend-<< parameters.workflow_id >>"
             echo ALL ENV WAS DELETED
