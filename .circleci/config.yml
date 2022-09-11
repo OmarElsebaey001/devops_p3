@@ -140,6 +140,7 @@ jobs:
           command: |
             echo "[web]" > workspace/inventory.txt
             aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text  >> workspace/inventory.txt
       - persist_to_workspace:
@@ -280,6 +281,7 @@ jobs:
             if curl "${API_URL}/api/status" | grep "ok"
             then
                 echo BACKEND PASSED
+                exit 0
             else
                 echo BACKEND FAILED
                 exit 1 
@@ -297,9 +299,9 @@ jobs:
               echo PASSED FRONTEND SMOKE TEST!!
               exit 1
             fi
-      #- destroy-environment: 
-      #    workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      #- revert-migrations
+      - destroy-environment: 
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
@@ -320,6 +322,27 @@ jobs:
       - destroy-environment: 
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
+  cleanup:
+      docker:
+        - image: amazon/aws-cli
+      steps:
+        - checkout
+        - run:
+            name: Get old stack workflow id
+            command: |
+            export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text --region us-east-1 )
+            echo OldWorkflowID: "${OldWorkflowID}"
+            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+            echo Stack names: "${STACKS[@]}"
+        - run:
+            name: Remove old stacks and files
+            command: |
+              if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+              then
+                echo Destroying the old workflow "${OldWorkflowID}"
+              fi
+
 workflows:
     default:
       jobs:
@@ -347,3 +370,6 @@ workflows:
             requires: [deploy-backend,deploy-frontend,run-migrations]
         - cloudfront-update:
             requires: [smoke-test]
+        - cleanup:
+            requires: [cloudfront-update]
+        
