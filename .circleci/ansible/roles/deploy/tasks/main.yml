@@ -18,7 +18,7 @@
 
 - name: "Install dependencies for project"
   shell: |
-    cd /backend
+    cd /backend/dist
     npm install
     pm2 stop default
     pm2 start npm -- start
@@ -36,7 +36,7 @@
 #- name:  start app
 #  command:  pm2 start main.js
 #  args:
-#    chdir: /backend/dest
+#    chdir: /backend/dist
 #  environment:
 #      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
 #      TYPEORM_MIGRATIONS_DIR: "./migrations"

@@ -282,6 +282,7 @@ jobs:
                 echo BACKEND PASSED
             else
                 echo BACKEND FAILED
+                exit 1 
             fi
       - run:
           name: Frontend smoke test.
