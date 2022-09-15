@@ -348,9 +348,9 @@ jobs:
                   elif [[  $i =~ "frontend" ]]
                   then 
                     echo Removing FRONTEND ${i:19}
-                    echo bucket: aws s3 rb s3://${i:19} --force
+                    echo bucket: aws s3 rb s3://udapeople-${i:19} --force
                     echo stack: aws cloudformation delete-stack --stack-name "udapeople-frontend-${i:19}" --region us-east-1
-                    aws s3 rb s3://${i:19} --force
+                    aws s3 rb s3://udapeople-${i:19} --force
                     aws cloudformation delete-stack --stack-name "udapeople-frontend-${i:19}" --region us-east-1
                   else 
                     echo "	STACK IS NEITHER FRONT NOR BACK END, SKIP.."
